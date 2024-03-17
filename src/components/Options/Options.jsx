@@ -1,6 +1,6 @@
 import css from "./Options.module.css";
 
-const Options = ({ updateFeedback, resetFeedback }) => {
+const Options = ({ updateFeedback, resetFeedback, totalFeedback }) => {
   return (
     <>
       <ul className={css.bntWrapper}>
@@ -14,7 +14,11 @@ const Options = ({ updateFeedback, resetFeedback }) => {
           <button onClick={() => updateFeedback("bad")}>Bad</button>
         </li>
         <li>
-          <button onClick={() => resetFeedback()}>Reset</button>
+          {totalFeedback > 0 ? (
+            <button onClick={() => resetFeedback()}>Reset</button>
+          ) : (
+            ""
+          )}
         </li>
       </ul>
     </>

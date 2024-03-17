@@ -5,7 +5,7 @@ import Feedback from "./components/Feedback/Feedback";
 import Notification from "./components/Notification/Notification";
 
 const App = () => {
-  const [feedback, setFfeedbackType] = useState(() => {
+  const [feedback, setFeedback] = useState(() => {
     let saveFeedback = window.localStorage.getItem("saved-feedbacks");
     if (saveFeedback !== null) {
       return JSON.parse(saveFeedback).feedback;
@@ -18,7 +18,7 @@ const App = () => {
   });
 
   const updateFeedback = (feedbackType) => {
-    setFfeedbackType({
+    setFeedback({
       ...feedback,
       [feedbackType]: feedback[feedbackType] + 1,
     });
@@ -26,8 +26,12 @@ const App = () => {
   let totalFeedback = feedback.good + feedback.neutral + feedback.bad;
 
   const resetFeedback = () => {
-    setFfeedbackType({ good: 0, neutral: 0, bad: 0 });
+    setFeedback({ good: 0, neutral: 0, bad: 0 });
   };
+
+  const totalPercent = Math.round(
+    ((feedback.good + feedback.neutral) / totalFeedback) * 100
+  );
 
   useEffect(() => {
     window.localStorage.setItem(
@@ -39,9 +43,20 @@ const App = () => {
   return (
     <>
       <Descriprion />
-      <Options updateFeedback={updateFeedback} resetFeedback={resetFeedback} />
-      <Notification totalFeedback={totalFeedback} />
-      <Feedback feedback={feedback} totalFeedback={totalFeedback} />
+      <Options
+        updateFeedback={updateFeedback}
+        resetFeedback={resetFeedback}
+        totalFeedback={totalFeedback}
+      />
+      {totalFeedback > 0 ? (
+        <Feedback
+          feedback={feedback}
+          totalFeedback={totalFeedback}
+          totalPercent={totalPercent}
+        />
+      ) : (
+        <Notification />
+      )}
     </>
   );
 };
